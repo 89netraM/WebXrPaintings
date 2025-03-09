@@ -14,8 +14,8 @@ window.addEventListener("load", async () => {
 
   const camera = new Camera();
 
-  const targetPainting = await window.createImageBitmap(await (await window.fetch("target.png")).blob());
-  const texture = await new TextureLoader().loadAsync("replacement.png");
+  const targetPainting = await window.createImageBitmap(await (await window.fetch("target")).blob());
+  const texture = await new TextureLoader().loadAsync("replacement");
   texture.colorSpace = SRGBColorSpace;
   const scale = 1;
 

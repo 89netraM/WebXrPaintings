@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -20,6 +22,8 @@ builder.Services.AddSingleton<PaintingsService>();
 var app = builder.Build();
 
 app.UsePathBase(config.BaseUrl.AbsolutePath);
+
+app.UseStaticFiles();
 
 app.MapGet(
     "/{id}/target",
@@ -47,6 +51,16 @@ app.MapGet(
     static ([FromServices] PaintingsService paintingsService, [FromRoute] string id) =>
         paintingsService.TryGetPainting(id, out var painting, out var contentType)
             ? Results.File(painting, contentType)
+            : Results.NotFound()
+);
+
+app.UseRewriter(new RewriteOptions().AddRedirect("(.*[^/])$", "$1/"));
+
+app.MapGet(
+    "/{id}",
+    static ([FromServices] PaintingsService paintingsService, [FromRoute] string id) =>
+        paintingsService.TryGetPainting(id, out _, out _)
+            ? Results.File(Path.GetFullPath("wwwroot/index.html"), MediaTypeNames.Text.Html)
             : Results.NotFound()
 );
 
