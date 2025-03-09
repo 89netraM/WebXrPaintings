@@ -8,3 +8,27 @@ html, body {
 * {
   box-sizing: border-box;
 }
+
+body {
+  display: grid;
+  grid-template-areas: "center";
+
+  canvas {
+    align-self: stretch;
+    justify-self: stretch;
+    grid-area: center;
+  }
+
+  #view-in-ar {
+    align-self: center;
+    justify-self: center;
+    grid-area: center;
+    display: none;
+  }
+
+  #ar-not-supported {
+    align-self: center;
+    justify-self: center;
+    grid-area: center;
+  }
+}
