@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +15,7 @@ var config = builder.ConfigureConfig();
 
 builder.Services.AddSingleton<QRCodeGenerator>();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+builder.Services.AddSingleton<PaintingsService>();
 
 var app = builder.Build();
 
@@ -26,9 +26,15 @@ app.MapGet(
     static (
         [FromServices] IOptions<Config> config,
         [FromServices] QRCodeGenerator qrCodeGenerator,
+        [FromServices] PaintingsService paintingsService,
         [FromRoute] string id
     ) =>
     {
+        if (!paintingsService.TryGetPainting(id, out _, out _))
+        {
+            return Results.NotFound();
+        }
+
         var url = new Uri(config.Value.BaseUrl, id);
         var qrCode = qrCodeGenerator.CreateQrCode(url.ToString(), QRCodeGenerator.ECCLevel.H);
         var png = new PngByteQRCode(qrCode);
@@ -38,15 +44,9 @@ app.MapGet(
 
 app.MapGet(
     "/{id}/replacement",
-    static (
-        [FromServices] IOptions<Config> config,
-        [FromServices] FileExtensionContentTypeProvider contentTypeProvider,
-        [FromRoute] string id
-    ) =>
-        Directory.GetFiles(config.Value.PaintingsPath, $"{id}.*") is [var painting]
-        && contentTypeProvider.TryGetContentType(painting, out var contentType)
-        && contentType.StartsWith("image/")
-            ? Results.File(Path.GetFullPath(painting), contentType)
+    static ([FromServices] PaintingsService paintingsService, [FromRoute] string id) =>
+        paintingsService.TryGetPainting(id, out var painting, out var contentType)
+            ? Results.File(painting, contentType)
             : Results.NotFound()
 );
 
