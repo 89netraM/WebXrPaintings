@@ -5,10 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace WebXrPaintings;
 
-public class PaintingsService(
-    IOptions<Config> config,
-    FileExtensionContentTypeProvider contentTypeProvider
-)
+public class PaintingsService(IOptions<Config> config, IContentTypeProvider contentTypeProvider)
 {
     private readonly Config config = config.Value;
 

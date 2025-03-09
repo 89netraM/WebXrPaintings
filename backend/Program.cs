@@ -14,7 +14,7 @@ var builder = WebApplication.CreateSlimBuilder(args);
 var config = builder.ConfigureConfig();
 
 builder.Services.AddSingleton<QRCodeGenerator>();
-builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+builder.Services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
 builder.Services.AddSingleton<PaintingsService>();
 
 var app = builder.Build();
