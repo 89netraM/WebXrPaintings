@@ -11,6 +11,9 @@ public class Config
 {
     [Required]
     public required Uri BaseUrl { get; init; }
+
+    [Required]
+    public required string PaintingsPath { get; init; }
 }
 
 public static class IHostApplicationBuilderExtensions
