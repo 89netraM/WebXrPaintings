@@ -12,7 +12,7 @@
     "@types/three": "^0.174.0",
     "@vitejs/plugin-basic-ssl": "^2.0.0",
     "three": "^0.174.0",
-    "typescript": "~5.7.2",
+    "typescript": "^5.8.2",
     "vite": "^6.2.0"
   }
 }

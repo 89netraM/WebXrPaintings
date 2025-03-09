@@ -1,5 +1,5 @@
 import "./styles.css";
-import { Camera, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, SRGBColorSpace, TextureLoader, WebGLRenderer } from "../node_modules/@types/three";
+import { Camera, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, SRGBColorSpace, TextureLoader, WebGLRenderer } from "three";
 
 window.addEventListener("load", async () => {
   const isArSupported = await navigator.xr?.isSessionSupported("immersive-ar");
