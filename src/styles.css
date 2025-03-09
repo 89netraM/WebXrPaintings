@@ -1,0 +1,10 @@
+html, body {
+  margin: 0px;
+  width: 100dvw;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
