@@ -19,16 +19,12 @@ body {
     grid-area: center;
   }
 
-  #view-in-ar {
+  #view-in-ar, #loading, #ar-not-supported {
     align-self: center;
     justify-self: center;
     grid-area: center;
-    display: none;
   }
-
-  #ar-not-supported {
-    align-self: center;
-    justify-self: center;
-    grid-area: center;
+  #view-in-ar, #ar-not-supported {
+    display: none;
   }
 }

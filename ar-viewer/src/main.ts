@@ -4,6 +4,8 @@ import { Camera, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, SRGBColorSpace, 
 window.addEventListener("load", async () => {
   const isArSupported = await navigator.xr?.isSessionSupported("immersive-ar");
   if (!isArSupported) {
+    document.getElementById("ar-not-supported")!.style.display = "block";
+    document.getElementById("loading")!.style.display = "none";
     return;
   }
 
@@ -32,7 +34,7 @@ window.addEventListener("load", async () => {
   replacementPainting.visible = false;
   scene.add(replacementPainting);
 
-  document.getElementById("ar-not-supported")!.style.display = "none";
+  document.getElementById("loading")!.style.display = "none";
   const viewInArButton = document.getElementById("view-in-ar") as HTMLButtonElement;
   viewInArButton.style.display = "block"
 
