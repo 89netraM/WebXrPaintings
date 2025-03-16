@@ -16,12 +16,13 @@ window.addEventListener("load", async () => {
 
   const camera = new Camera();
 
-  const [targetPainting, texture] = await Promise.all([
+  const [targetPainting, texture, config] = await Promise.all([
     (async () => await window.createImageBitmap(await (await window.fetch(getAssetUrl("target"))).blob()))(),
     new TextureLoader().loadAsync(getAssetUrl("replacement")),
+    (async () => await (await window.fetch(getAssetUrl("config"))).json())(),
   ]);
   texture.colorSpace = SRGBColorSpace;
-  const scale = 1;
+  const scale = config.scale ?? 1;
 
   const scene = new Scene();
   const targetAspectRatio = targetPainting.width / targetPainting.height;
@@ -31,7 +32,7 @@ window.addEventListener("load", async () => {
     : [textureAspectRatio / targetAspectRatio, 1 / targetAspectRatio];
   const geometry = new PlaneGeometry(width * scale, height * scale);
   geometry.rotateX(-Math.PI / 2);
-  const replacementPainting = new Mesh(geometry, new MeshBasicMaterial({ map: texture }));
+  const replacementPainting = new Mesh(geometry, new MeshBasicMaterial({ ...config.material, map: texture }));
   replacementPainting.matrixAutoUpdate = false;
   replacementPainting.visible = false;
   scene.add(replacementPainting);
@@ -46,7 +47,7 @@ window.addEventListener("load", async () => {
       trackedImages: [
         {
           image: targetPainting,
-          widthInMeters: 1,
+          widthInMeters: config.widthInMeters ?? 1,
         },
       ],
     });

@@ -55,6 +55,17 @@ app.MapGet(
             : Results.NotFound()
 );
 
+app.MapGet(
+    "/{id}/config",
+    static ([FromServices] PaintingsService paintingsService, [FromRoute] string id) =>
+        (paintingsService.TryGetConfig(id, out var config), config) switch
+        {
+            (true, string) => Results.File(config, MediaTypeNames.Application.Json),
+            (true, null) => Results.Json(new { }),
+            (false, _) => Results.NotFound(),
+        }
+);
+
 app.MapRazorPages();
 
 app.Run();
