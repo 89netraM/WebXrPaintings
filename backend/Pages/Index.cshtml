@@ -1,0 +1,10 @@
+﻿@page "/{id}"
+@using WebXrPaintings
+@inject PaintingsService paintingsService
+@{
+    if (RouteData.Values["id"] is not string id || !paintingsService.TryGetPainting(id, out _, out _))
+    {
+        Response.StatusCode = 404;
+        return;
+    }
+}

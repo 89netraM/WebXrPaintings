@@ -16,8 +16,10 @@ window.addEventListener("load", async () => {
 
   const camera = new Camera();
 
-  const targetPainting = await window.createImageBitmap(await (await window.fetch("target")).blob());
-  const texture = await new TextureLoader().loadAsync("replacement");
+  const [targetPainting, texture] = await Promise.all([
+    (async () => await window.createImageBitmap(await (await window.fetch(getAssetUrl("target"))).blob()))(),
+    new TextureLoader().loadAsync(getAssetUrl("replacement")),
+  ]);
   texture.colorSpace = SRGBColorSpace;
   const scale = 1;
 
@@ -69,3 +71,15 @@ window.addEventListener("load", async () => {
     });
   });
 });
+
+function getAssetUrl(asset: string): string {
+  const origin = location.origin;
+  let pathname = location.pathname;
+  if (!pathname.startsWith("/")) {
+    pathname = "/" + pathname;
+  }
+  if (!pathname.endsWith("/")) {
+    pathname += "/";
+  }
+  return origin + pathname + asset;
+}

@@ -4,7 +4,6 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -18,6 +17,8 @@ var config = builder.ConfigureConfig();
 builder.Services.AddSingleton<QRCodeGenerator>();
 builder.Services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
 builder.Services.AddSingleton<PaintingsService>();
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -54,14 +55,6 @@ app.MapGet(
             : Results.NotFound()
 );
 
-app.UseRewriter(new RewriteOptions().AddRedirect("(.*[^/])$", "$1/"));
-
-app.MapGet(
-    "/{id}",
-    static ([FromServices] PaintingsService paintingsService, [FromRoute] string id) =>
-        paintingsService.TryGetPainting(id, out _, out _)
-            ? Results.File(Path.GetFullPath("wwwroot/index.html"), MediaTypeNames.Text.Html)
-            : Results.NotFound()
-);
+app.MapRazorPages();
 
 app.Run();

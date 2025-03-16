@@ -10,10 +10,12 @@ WORKDIR /app
 COPY backend/WebXrPaintings.csproj backend/packages.lock.json ./
 RUN dotnet restore --locked-mode
 COPY backend/ ./
+COPY --from=ar-viewer-builder /app/dist/index.html ./Pages/
+RUN cat ./Pages/index.html >> ./Pages/Index.cshtml && rm ./Pages/index.html
 RUN dotnet publish --no-restore --output dist
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
-COPY --from=ar-viewer-builder /app/dist/ ./wwwroot/
+COPY --from=ar-viewer-builder /app/dist/assets/ ./wwwroot/assets/
 COPY --from=backend-builder /app/dist/ ./
 ENTRYPOINT [ "dotnet", "WebXrPaintings.dll" ]
