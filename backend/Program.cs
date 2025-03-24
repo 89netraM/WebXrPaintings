@@ -1,9 +1,9 @@
 using System;
-using System.IO;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -18,7 +18,9 @@ builder.Services.AddSingleton<QRCodeGenerator>();
 builder.Services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
 builder.Services.AddSingleton<PaintingsService>();
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+    options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute())
+);
 
 var app = builder.Build();
 
@@ -66,6 +68,7 @@ app.MapGet(
         }
 );
 
+app.UseRewriter(new RewriteOptions().AddRedirect("^(.*[^/])$", "$1/"));
 app.MapRazorPages();
 
 app.Run();

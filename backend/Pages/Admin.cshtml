@@ -1,0 +1,22 @@
+﻿@page "/{id}/admin"
+@model WebXrPaintings.Pages.Admin
+
+<h1>Admin page</h1>
+
+<form action="." method="post" enctype="multipart/form-data">
+    @if (Model.Exists)
+    {
+        <img src="../replacement" style="max-height: 40vh"/>
+    }
+    <input name="replacement" type="file" accept="image/*" required="@(!Model.Exists)"/>
+
+    <br>
+    
+    <textarea name="config" autocorrect="off" placeholder="config.json" rows="8" spellcheck="false" style="width: 100%">@Model.Config</textarea>
+
+    <br>
+
+    <button type="submit">
+        @(Model.Exists ? "Update" : "Create")
+    </button>
+</form>

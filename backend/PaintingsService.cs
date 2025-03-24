@@ -11,6 +11,15 @@ public class PaintingsService(IOptions<Config> config, IContentTypeProvider cont
 {
     private readonly Config config = config.Value;
 
+    public string CreatePaintingPath(string id, string originalFileName) =>
+        Path.Join(
+            config.PaintingsPath,
+            Path.ChangeExtension(id, Path.GetExtension(originalFileName))
+        );
+
+    public string CreateConfigPath(string id) =>
+        Path.Join(config.PaintingsPath, Path.ChangeExtension(id, "json"));
+
     public bool TryGetPainting(
         string id,
         [NotNullWhen(true)] out string? path,
